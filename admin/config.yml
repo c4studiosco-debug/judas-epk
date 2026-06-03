@@ -1,0 +1,61 @@
+backend:
+  name: github
+  repo: c4studiosco-debug/judas-epk
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - name: "general"
+        label: "General Info"
+        file: "content/general.json"
+        fields:
+          - { label: "Artist Name", name: "artist_name", widget: "string" }
+          - { label: "Tagline", name: "tagline", widget: "string" }
+          - { label: "Bio Paragraph 1", name: "bio1", widget: "text" }
+          - { label: "Bio Paragraph 2", name: "bio2", widget: "text" }
+          - { label: "Bio Paragraph 3", name: "bio3", widget: "text" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Instagram Handle", name: "instagram", widget: "string" }
+          - { label: "Location", name: "location", widget: "string" }
+          - { label: "Press Quote", name: "press_quote", widget: "string" }
+          - { label: "Press Quote Source", name: "press_quote_source", widget: "string" }
+          - { label: "Hero Image", name: "hero_image", widget: "image" }
+          - { label: "About Image", name: "about_image", widget: "image" }
+
+      - name: "single"
+        label: "Debut Single"
+        file: "content/single.json"
+        fields:
+          - { label: "Single Title", name: "title", widget: "string" }
+          - { label: "Release Info", name: "release_info", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Cover Art", name: "cover", widget: "image" }
+          - { label: "Spotify URL", name: "spotify", widget: "string", required: false }
+          - { label: "Apple Music URL", name: "apple", widget: "string", required: false }
+          - { label: "SoundCloud URL", name: "soundcloud", widget: "string", required: false }
+          - { label: "YouTube URL", name: "youtube", widget: "string", required: false }
+
+  - name: "shows"
+    label: "Live Dates"
+    folder: "content/shows"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Date", name: "date", widget: "string" }
+      - { label: "Venue", name: "venue", widget: "string" }
+      - { label: "City", name: "city", widget: "string" }
+      - { label: "Ticket URL", name: "ticket_url", widget: "string", required: false }
+
+  - name: "photos"
+    label: "Press Photos"
+    folder: "content/photos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Photo", name: "image", widget: "image" }
+      - { label: "Alt Text", name: "alt", widget: "string" }
