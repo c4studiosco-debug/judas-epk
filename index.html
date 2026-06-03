@@ -139,13 +139,50 @@
     .contact-right button { font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:18px;background:var(--pink);color:var(--black);border:none;font-weight:700;cursor:none;transition:box-shadow .2s,transform .2s; }
     .contact-right button:hover { box-shadow:0 0 40px rgba(255,45,139,.6);transform:translateY(-2px); }
 
-    footer { padding:40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--grey2); }
+    .footer-wrap {
+      position: relative;
+      overflow: hidden;
+      background: var(--black);
+    }
+    .glitch-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+    }
+    footer {
+      padding: 50px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--grey2);
+      position: relative;
+      z-index: 2;
+    }
     .footer-logo { font-family:var(--font-display);font-size:32px;color:var(--white); }
     .footer-logo span { color:var(--pink); }
-    .footer-copy { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;color:rgba(245,240,240,.3);text-align:center; }
-    .footer-socials { display:flex;gap:20px; }
-    .footer-socials a { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,240,.4);text-decoration:none;transition:color .2s; }
-    .footer-socials a:hover { color:var(--blue); }
+    .footer-copy { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;color:rgba(245,240,240,.4);text-align:center; }
+    .footer-socials { display:flex;gap:16px; }
+    .footer-socials a {
+      font-family:var(--font-mono);
+      font-size:11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color: var(--black);
+      background: var(--pink);
+      text-decoration:none;
+      padding: 12px 22px;
+      font-weight: 700;
+      transition: all .2s;
+      box-shadow: 0 0 20px rgba(255,45,139,0.5);
+      position: relative;
+    }
+    .footer-socials a:hover {
+      background: var(--blue);
+      box-shadow: 0 0 30px rgba(0,240,255,0.7);
+      transform: translateY(-2px);
+    }
 
     .reveal { opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease; }
     .reveal.visible { opacity:1;transform:translateY(0); }
@@ -355,6 +392,9 @@ async function init() {
           <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/Judas_2.jpg" alt="Press photo 3" /></div>
           <div class="photo-item p4 reveal"><img src="/images/touch_5.jpg" alt="Live photo" /></div>
           <div class="photo-item p5 reveal reveal-delay-1"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" /></div>
+          <div class="photo-item p4 reveal"><img src="/images/body_art_edited.jpg" alt="Body art photo" /></div>
+          <div class="photo-item p3 reveal reveal-delay-1"><img src="/images/red_2_edited.jpg" alt="Red photo" /></div>
+          <div class="photo-item p5 reveal reveal-delay-2"><img src="/images/studo_2_edited.jpg" alt="Studio photo" /></div>
         </div>
         <p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:rgba(245,240,240,.35);margin-top:24px;text-align:right;">
           High-res assets: <a href="mailto:${g.email||'judas@aprettysob.com'}" style="color:var(--blue);text-decoration:none;">${g.email||'judas@aprettysob.com'}</a>
@@ -401,14 +441,17 @@ async function init() {
     </section>
 
     <!-- FOOTER -->
-    <footer>
-      <div class="footer-logo">JUD<span>A</span>S</div>
-      <div class="footer-copy">© 2026 ${g.artist_name||'Judas'} / A Pretty SOB. All rights reserved.</div>
-      <div class="footer-socials">
-        <a href="https://instagram.com/${(g.instagram||'@aprettysob').replace('@','')}" target="_blank">Instagram</a>
-        <a href="mailto:${g.email||'judas@aprettysob.com'}">Email</a>
-      </div>
-    </footer>
+    <div class="footer-wrap">
+      <canvas class="glitch-canvas" id="glitchCanvas"></canvas>
+      <footer>
+        <div class="footer-logo">JUD<span>A</span>S</div>
+        <div class="footer-copy">© 2026 JUDAS JAMES. ALL RIGHTS RESERVED.</div>
+        <div class="footer-socials">
+          <a href="https://instagram.com/${(g.instagram||'@aprettysob').replace('@','')}" target="_blank">Instagram</a>
+          <a href="mailto:${g.email||'judas@aprettysob.com'}">Email</a>
+        </div>
+      </footer>
+    </div>
   `;
 
   // cursor hover
@@ -432,6 +475,129 @@ function handleContact(email) {
   if (!name || !mail || !msg) { alert('Please fill in name, email, and message.'); return; }
   window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject||'EPK Inquiry')}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+mail+'\n\n'+msg)}`;
 }
+
+
+// ── GLITCH CANVAS ────────────────────────────────────
+function initGlitch() {
+  const canvas = document.getElementById('glitchCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const PINK   = '#FF2D8B';
+  const BLUE   = '#00F0FF';
+  const WHITE  = '#F5F0F0';
+
+  // Crack segments — each is a jagged lightning-bolt style line
+  class Crack {
+    constructor() { this.reset(); }
+    reset() {
+      this.x      = Math.random() * canvas.width;
+      this.y      = Math.random() * canvas.height;
+      this.segs   = [];
+      this.len    = 6 + Math.floor(Math.random() * 12);
+      this.color  = Math.random() > 0.5 ? PINK : (Math.random() > 0.5 ? BLUE : WHITE);
+      this.alpha  = 0;
+      this.maxAlpha = 0.4 + Math.random() * 0.55;
+      this.phase  = 'in'; // in | hold | out
+      this.holdT  = 0;
+      this.maxHold = 8 + Math.random() * 30;
+      this.speed  = 0.04 + Math.random() * 0.06;
+      this.glitterCount = Math.floor(Math.random() * 6);
+      // Build jagged path
+      let cx = this.x, cy = this.y;
+      for (let i = 0; i < this.len; i++) {
+        const angle = (Math.random() * Math.PI * 0.6) - Math.PI * 0.3 + (Math.PI / 2);
+        const dist  = 4 + Math.random() * 18;
+        cx += Math.cos(angle) * dist;
+        cy += Math.sin(angle) * dist;
+        this.segs.push({x: cx, y: cy});
+      }
+      // Pixel block artifacts along crack
+      this.pixels = Array.from({length: 3 + Math.floor(Math.random()*6)}, () => ({
+        x: this.x + (Math.random()-0.5)*80,
+        y: this.y + Math.random()*60,
+        w: 2 + Math.floor(Math.random()*8),
+        h: 1 + Math.floor(Math.random()*4),
+        c: Math.random() > 0.5 ? PINK : BLUE,
+      }));
+    }
+    draw() {
+      if (this.segs.length === 0) return;
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+
+      // chromatic aberration: draw offset copies
+      for (let offset of [[-1,0,'rgba(0,240,255,0.4)'], [1,0,'rgba(255,45,139,0.4)'], [0,0, this.color]]) {
+        ctx.beginPath();
+        ctx.moveTo(this.x + offset[0], this.y + offset[1]);
+        for (const s of this.segs) ctx.lineTo(s.x + offset[0], s.y + offset[1]);
+        ctx.strokeStyle = offset[2];
+        ctx.lineWidth = offset[2] === this.color ? 1.5 : 0.8;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+        ctx.stroke();
+      }
+
+      // pixel blocks
+      for (const p of this.pixels) {
+        ctx.fillStyle = p.c;
+        ctx.shadowColor = p.c;
+        ctx.shadowBlur = 6;
+        ctx.fillRect(Math.round(p.x), Math.round(p.y), p.w, p.h);
+      }
+
+      // glitter sparkles at crack joints
+      const sparkPoints = this.segs.filter((_,i) => i % Math.max(1,Math.floor(this.segs.length/this.glitterCount)) === 0);
+      for (const sp of sparkPoints) {
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 1 + Math.random()*1.5, 0, Math.PI*2);
+        ctx.fillStyle = WHITE;
+        ctx.shadowColor = PINK;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+    update() {
+      if (this.phase === 'in') {
+        this.alpha += this.speed;
+        if (this.alpha >= this.maxAlpha) { this.alpha = this.maxAlpha; this.phase = 'hold'; }
+      } else if (this.phase === 'hold') {
+        this.holdT++;
+        // flicker
+        this.alpha = this.maxAlpha * (0.85 + Math.random() * 0.15);
+        if (this.holdT > this.maxHold) this.phase = 'out';
+      } else {
+        this.alpha -= this.speed * 0.7;
+        if (this.alpha <= 0) this.reset();
+      }
+    }
+  }
+
+  const cracks = Array.from({length: 18}, () => {
+    const c = new Crack();
+    c.alpha = Math.random() * c.maxAlpha; // stagger start
+    return c;
+  });
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const c of cracks) { c.update(); c.draw(); }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// init glitch after DOM renders
+setTimeout(initGlitch, 100);
 
 // Netlify Identity redirect
 if (window.netlifyIdentity) {
