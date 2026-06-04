@@ -92,8 +92,9 @@
     .stream-btn[href=""] { display:none; }
     #musicCrossCanvas { position:absolute;top:0;right:0;width:calc(100% - 500px);height:100%;pointer-events:none;z-index:1; }
 
-    #photos { padding:100px 40px; }
-    #photos > div { max-width:1400px;margin:0 auto; }
+    #photos { padding:100px 40px;position:relative;overflow:hidden; }
+    #photosCanvas { position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0; }
+    #photos > div { max-width:1400px;margin:0 auto;position:relative;z-index:1; }
     .photo-grid { display:grid;grid-template-columns:repeat(12,1fr);gap:12px; }
     .photo-item { overflow:hidden;position:relative;cursor:none; }
     .photo-item img { width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(100%) contrast(1.05);transition:filter .4s ease,transform .6s cubic-bezier(.17,.67,.38,1.3); }
@@ -287,6 +288,7 @@ async function init() {
 
     <!-- PHOTOS -->
     <section id="photos">
+      <canvas id="photosCanvas"></canvas>
       <div>
         <span class="section-label">Press Photos</span>
         <h2 class="reveal">Press<br><span class="accent">Gallery</span></h2>
@@ -296,9 +298,10 @@ async function init() {
           <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/touch_5.jpg" alt="Press photo 3" /></div>
           <div class="photo-item p5 reveal"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" /></div>
           <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/Judas_2.jpg" alt="Press photo 4" /></div>
-          <div class="photo-item p3 reveal"><img src="/images/studo_2_edited.jpg" alt="Studio photo" style="object-fit:contain;object-position:center;background:#0a0a0a;" /></div>
-          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/body_art_edited.jpg" alt="Body art photo" style="object-fit:contain;object-position:center;background:#0a0a0a;" /></div>
-          <div class="photo-item p5 reveal reveal-delay-2"><img src="/images/red_2_edited.jpg" alt="Red photo" style="object-fit:contain;object-position:center;background:#0a0a0a;transform:rotate(90deg) scale(0.75);transform-origin:center center;" /></div>
+          <div class="photo-item p1 reveal" style="aspect-ratio:3/4;"><img src="/images/studo_2_edited.jpg" alt="Studio photo" style="object-fit:contain;object-position:center;background:#0a0a0a;" /></div>
+          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/body_art_edited.jpg" alt="Body art photo" style="object-fit:cover;object-position:center;filter:grayscale(100%) contrast(1.05);" /></div>
+          <div class="photo-item p5 reveal reveal-delay-2" style="overflow:hidden;"><img src="/images/red_2_edited.jpg" alt="Red photo" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(100%) contrast(1.05);transform:rotate(90deg) scale(1.8);transform-origin:center center;" /></div>
+          <div class="photo-item p2 reveal"><img src="/images/velvet.JPG" alt="Velvet photo" style="object-fit:cover;object-position:center top;filter:grayscale(100%) contrast(1.05);" /></div>
         </div>
         <p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:rgba(245,240,240,.35);margin-top:24px;text-align:right;">
           High-res assets: <a href="mailto:${email}" style="color:var(--blue);text-decoration:none;">${email}</a>
@@ -355,6 +358,7 @@ async function init() {
   setTimeout(()=>{
     initMusicCross();
     initFooterStatic();
+    initPhotosStatic();
   },100);
 }
 
@@ -505,6 +509,75 @@ function initMusicCross() {
       }
       ctx.save(); ctx.globalAlpha=mainA;
       ctx.drawImage(crossSrc,baseX,baseY,crossW,crossH); ctx.restore();
+    }
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// ── PHOTOS SECTION STATIC ───────────────────────────
+function initPhotosStatic() {
+  const canvas = document.getElementById('photosCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize(){
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const COLORS = [
+    [10,10,10],
+    [245,240,240],
+    [255,45,139],
+    [0,240,255],
+  ];
+
+  let phaseT=0, colorIdx=0;
+  const PHASE_DURATION=180;
+  let fromColor=COLORS[0], toColor=COLORS[1];
+
+  function lerpColor(a,b,t){
+    return [
+      Math.round(a[0]+(b[0]-a[0])*t),
+      Math.round(a[1]+(b[1]-a[1])*t),
+      Math.round(a[2]+(b[2]-a[2])*t),
+    ];
+  }
+
+  function loop(){
+    const W=canvas.width, H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+
+    phaseT++;
+    if(phaseT>PHASE_DURATION){
+      phaseT=0; colorIdx=(colorIdx+1)%COLORS.length;
+      fromColor=COLORS[colorIdx];
+      toColor=COLORS[(colorIdx+1)%COLORS.length];
+    }
+    const t=phaseT/PHASE_DURATION;
+    const bg=lerpColor(fromColor,toColor,t);
+
+    ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;
+    ctx.fillRect(0,0,W,H);
+
+    const imgData=ctx.getImageData(0,0,W,H);
+    const d=imgData.data;
+    for(let i=0;i<d.length;i+=4){
+      const noise=(Math.random()-.5)*120;
+      d[i]  =Math.min(255,Math.max(0,d[i]+noise));
+      d[i+1]=Math.min(255,Math.max(0,d[i+1]+noise));
+      d[i+2]=Math.min(255,Math.max(0,d[i+2]+noise));
+      d[i+3]=255;
+    }
+    ctx.putImageData(imgData,0,0);
+
+    for(let y=0;y<H;y+=2){
+      ctx.fillStyle='rgba(0,0,0,0.08)';
+      ctx.fillRect(0,y,W,1);
     }
 
     requestAnimationFrame(loop);
