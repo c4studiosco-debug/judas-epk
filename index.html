@@ -34,6 +34,7 @@
     .nav-links a { font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.7;transition:opacity .2s,color .2s; }
     .nav-links a:hover { opacity:1;color:var(--pink); }
 
+    /* #1 sharper hero image */
     #hero { min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden; }
     .hero-left { display:flex;flex-direction:column;justify-content:flex-end;padding:120px 60px 80px;position:relative;z-index:2; }
     .hero-tag { font-family:var(--font-mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--blue);margin-bottom:20px;opacity:0;animation:fadeUp .8s .3s forwards; }
@@ -50,8 +51,9 @@
     .btn-outline:hover { background:rgba(0,240,255,.1);box-shadow:0 0 30px rgba(0,240,255,.3); }
     .hero-right { position:relative;overflow:hidden; }
     .hero-img-wrap { position:absolute;inset:0; }
-    .hero-img-wrap img { width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.1); }
-    .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,139,.25) 0%,rgba(0,240,255,.15) 100%);mix-blend-mode:screen; }
+    /* #1: sharper — higher contrast, no grain, deep blacks */
+    .hero-img-wrap img { width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.4) brightness(0.88); }
+    .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,139,.2) 0%,rgba(0,240,255,.1) 100%);mix-blend-mode:screen; }
     .hero-img-fade { position:absolute;left:0;top:0;bottom:0;width:200px;background:linear-gradient(to right,var(--black),transparent); }
     .ticker-wrap { position:absolute;bottom:0;left:0;right:0;background:var(--pink);overflow:hidden;height:40px;display:flex;align-items:center;z-index:3; }
     .ticker-track { display:flex;white-space:nowrap;animation:ticker 18s linear infinite; }
@@ -72,9 +74,6 @@
     .about-img::after { content:'';position:absolute;inset:-16px -16px 16px 16px;border:1px solid var(--blue);z-index:-2;opacity:.3; }
     .about-text p { font-size:16px;line-height:1.8;color:rgba(245,240,240,.75);margin-bottom:24px; }
     .about-text p strong { color:var(--white); }
-    .stat-row { display:flex;gap:40px;margin-top:40px;border-top:1px solid var(--grey2);padding-top:32px; }
-    .stat-num { font-family:var(--font-display);font-size:48px;color:var(--pink);line-height:1; }
-    .stat-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,240,.5);margin-top:4px; }
 
     #music { background:var(--grey);padding:100px 40px;position:relative;overflow:hidden; }
     #music > div { max-width:1400px;margin:0 auto; }
@@ -91,16 +90,7 @@
     .stream-btn { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:12px 22px;border:1px solid var(--grey2);color:var(--white);text-decoration:none;transition:all .2s;cursor:none; }
     .stream-btn:hover { border-color:var(--pink);color:var(--pink);box-shadow:0 0 20px rgba(255,45,139,.2); }
     .stream-btn[href=""] { display:none; }
-
-    /* cross canvas — sits behind the right info column only */
-    #musicCrossCanvas {
-      position:absolute;
-      top:0; right:0;
-      width:calc(100% - 500px);
-      height:100%;
-      pointer-events:none;
-      z-index:1;
-    }
+    #musicCrossCanvas { position:absolute;top:0;right:0;width:calc(100% - 500px);height:100%;pointer-events:none;z-index:1; }
 
     #photos { padding:100px 40px; }
     #photos > div { max-width:1400px;margin:0 auto; }
@@ -121,53 +111,30 @@
     .press-strip blockquote { font-family:var(--font-display);font-size:clamp(32px,5vw,64px);color:var(--black);max-width:900px;margin:0 auto 20px;line-height:1.1;position:relative;z-index:1; }
     .press-strip cite { font-family:var(--font-mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.55); }
 
-    #live { max-width:1400px;margin:0 auto;padding:100px 40px; }
-    .live-header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:50px; }
-    .show-list { list-style:none; }
-    .show-item { display:grid;grid-template-columns:100px 1fr 1fr auto;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid var(--grey2);transition:background .2s,padding-left .2s; }
-    .show-item:hover { background:var(--grey);padding-left:16px; }
-    .show-date { font-family:var(--font-display);font-size:24px;color:var(--pink); }
-    .show-venue { font-size:16px;font-weight:700;color:var(--white); }
-    .show-city { font-family:var(--font-mono);font-size:12px;color:rgba(245,240,240,.5);letter-spacing:.1em; }
-    .show-link { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);text-decoration:none;border:1px solid var(--blue);padding:10px 18px;transition:all .2s;cursor:none; }
-    .show-link:hover { background:var(--blue);color:var(--black); }
-
+    /* #12 contact — simplified, no form, no grid */
     #contact { background:var(--grey);padding:100px 0; }
-    #contact > div { max-width:1400px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center; }
-    .contact-left p { font-size:15px;line-height:1.8;color:rgba(245,240,240,.6);margin-bottom:40px; }
-    .contact-info { list-style:none; }
+    #contact > div { max-width:700px;margin:0 auto;padding:0 40px; }
+    .contact-info { list-style:none;margin-top:20px; }
     .contact-info li { padding:18px 0;border-bottom:1px solid var(--grey2);display:flex;gap:20px;align-items:center; }
     .contact-info li:first-child { border-top:1px solid var(--grey2); }
-    .contact-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);min-width:80px; }
+    .contact-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);min-width:100px; }
     .contact-val { font-size:15px;color:var(--white); }
-    .contact-val a { color:var(--white);text-decoration:none;transition:color .2s; }
-    .contact-val a:hover { color:var(--pink); }
-    .contact-right { display:flex;flex-direction:column;gap:20px; }
-    .contact-right input,.contact-right textarea { background:var(--black);border:1px solid var(--grey2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:16px 20px;outline:none;transition:border-color .2s,box-shadow .2s;resize:none;cursor:none; }
-    .contact-right input:focus,.contact-right textarea:focus { border-color:var(--pink);box-shadow:0 0 20px rgba(255,45,139,.15); }
-    .contact-right input::placeholder,.contact-right textarea::placeholder { color:rgba(245,240,240,.3); }
-    .contact-right textarea { height:160px; }
-    .contact-right button { font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:18px;background:var(--pink);color:var(--black);border:none;font-weight:700;cursor:none;transition:box-shadow .2s,transform .2s; }
-    .contact-right button:hover { box-shadow:0 0 40px rgba(255,45,139,.6);transform:translateY(-2px); }
+    .contact-btn { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:11px 22px;background:var(--pink);color:var(--black);text-decoration:none;font-weight:700;transition:all .2s;cursor:none;display:inline-block; }
+    .contact-btn:hover { background:var(--blue);box-shadow:0 0 20px rgba(0,240,255,.4); }
 
+    /* #14 footer static */
     .footer-wrap { position:relative;overflow:hidden;background:var(--black); }
-    .glitch-canvas { position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0.85; }
-    .footer-wrap::before { content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--black) 0%,var(--black) 10%,transparent 33%);z-index:1;pointer-events:none; }
+    #footerCanvas { position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0; }
     footer { padding:50px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--grey2);position:relative;z-index:2; }
-    .footer-logo { font-family:var(--font-display);font-size:32px;color:var(--white); }
-    .footer-logo span { color:var(--pink); }
-    .footer-copy { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;color:rgba(245,240,240,.4);text-align:center; }
-    .footer-socials { display:flex;gap:16px; }
-    .footer-socials a { font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--black);background:var(--pink);text-decoration:none;padding:12px 22px;font-weight:700;transition:all .2s;box-shadow:0 0 20px rgba(255,45,139,0.5);position:relative; }
-    .footer-socials a:hover { background:var(--blue);box-shadow:0 0 30px rgba(0,240,255,0.7);transform:translateY(-2px); }
+    .footer-logo { font-family:var(--font-display);font-size:32px;mix-blend-mode:difference;color:var(--white); }
+    .footer-copy { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-align:center;mix-blend-mode:difference;color:var(--white); }
 
     .reveal { opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease; }
     .reveal.visible { opacity:1;transform:translateY(0); }
     .reveal-delay-1 { transition-delay:.15s; }
     .reveal-delay-2 { transition-delay:.3s; }
     .reveal-delay-3 { transition-delay:.45s; }
-
-    .loading { display:flex;align-items:center;justify-content:min-height:100vh;font-family:var(--font-display);font-size:40px;color:var(--pink);letter-spacing:.2em; }
+    .loading { display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:var(--font-display);font-size:40px;color:var(--pink);letter-spacing:.2em; }
 
     @media(max-width:900px){
       #hero{grid-template-columns:1fr}
@@ -182,9 +149,7 @@
       #musicCrossCanvas{display:none}
       .photo-grid{grid-template-columns:1fr 1fr}
       .p1,.p2,.p3,.p4,.p5{grid-column:span 2}
-      .show-item{grid-template-columns:80px 1fr}
-      .show-city{display:none}
-      #contact > div{grid-template-columns:1fr;gap:50px}
+      #contact > div{padding:0 24px}
       footer{flex-direction:column;gap:20px;text-align:center}
     }
   </style>
@@ -193,11 +158,9 @@
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
 <div id="app"><div class="loading">LOADING...</div></div>
 
 <script>
-// ── CURSOR ──────────────────────────────────────────
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
@@ -211,41 +174,16 @@ document.addEventListener('mousemove', e => {
   requestAnimationFrame(animRing);
 })();
 
-// ── LOAD CONTENT & RENDER ───────────────────────────
 async function loadJSON(path) {
-  try { const r=await fetch(path); if(!r.ok) return null; return r.json(); }
-  catch(e){ return null; }
-}
-
-async function loadShows() {
-  try {
-    const r=await fetch('/content/shows/');
-    const text=await r.text();
-    const matches=[...text.matchAll(/href="([^"]+\.json)"/g)].map(m=>m[1]);
-    const shows=await Promise.all(matches.map(f=>loadJSON('/content/shows/'+f.replace(/.*\//,'')).catch(()=>null)));
-    return shows.filter(Boolean);
-  } catch(e) {
-    const fallback=await loadJSON('/content/shows/electroluxx-pride.json');
-    return fallback?[fallback]:[];
-  }
+  try { const r=await fetch(path); if(!r.ok) return null; return r.json(); } catch(e){ return null; }
 }
 
 async function init() {
   const [general,single]=await Promise.all([loadJSON('/content/general.json'),loadJSON('/content/single.json')]);
-  const shows=await loadShows();
   const g=general||{};
   const s=single||{};
 
-  const showsHTML=shows.length
-    ?shows.map(show=>`
-        <li class="show-item reveal">
-          <div class="show-date">${show.date||'TBA'}</div>
-          <div class="show-venue">${show.venue||''}</div>
-          <div class="show-city">${show.city||''}</div>
-          ${show.ticket_url?`<a href="${show.ticket_url}" class="show-link" target="_blank">Tickets</a>`:`<a href="#contact" class="show-link">Inquire</a>`}
-        </li>`).join('')
-    :`<li class="show-item"><div class="show-date">—</div><div class="show-venue">More dates coming soon</div><div class="show-city">Nationwide</div><a href="#contact" class="show-link">Book</a></li>`;
-
+  // streaming links — if none, show PRE-SAVE NOW button
   const streamLinks=[
     {key:'spotify',label:'Spotify'},
     {key:'apple',label:'Apple Music'},
@@ -253,17 +191,20 @@ async function init() {
     {key:'youtube',label:'YouTube'},
   ].filter(l=>s[l.key])
    .map(l=>`<a href="${s[l.key]}" class="stream-btn" target="_blank">${l.label}</a>`)
-   .join('')||`<a href="#contact" class="stream-btn">Coming Soon</a>`;
+   .join('')||`<a href="#contact" class="stream-btn" style="background:var(--pink);color:var(--black);border-color:var(--pink);font-weight:700;">PRE-SAVE NOW</a>`;
+
+  const email = g.email||'judas@aprettysob.com';
+  const instaHandle = g.instagram||'@aprettysob';
+  const instaSlug = instaHandle.replace('@','');
 
   document.getElementById('app').innerHTML=`
-    <!-- NAV -->
+    <!-- NAV — #5: Music, About, Press, Contact (no Live) -->
     <nav>
       <a href="#hero" class="nav-logo">JUD<span>A</span>S</a>
       <ul class="nav-links">
-        <li><a href="#about">About</a></li>
         <li><a href="#music">Music</a></li>
+        <li><a href="#about">About</a></li>
         <li><a href="#photos">Press</a></li>
-        <li><a href="#live">Live</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -271,12 +212,12 @@ async function init() {
     <!-- HERO -->
     <header id="hero">
       <div class="hero-left">
-        <p class="hero-tag">Electronic Press Kit — 2026</p>
+        <p class="hero-tag">Debut Single, 6/26/26</p>
         <h1 class="hero-name">JU<span class="stroke">D</span><span class="pink">AS</span></h1>
         <p class="hero-sub">${g.tagline||'Queer pop provocateur. Main character energy.'}</p>
         <div class="hero-cta">
-          <a href="#music" class="btn btn-primary">Hear the Music</a>
-          <a href="#contact" class="btn btn-outline">Book / Press</a>
+          <a href="#music" class="btn btn-primary">PRE-SAVE NOW</a>
+          <a href="#photos" class="btn btn-outline">PRESS KIT</a>
         </div>
       </div>
       <div class="hero-right">
@@ -290,52 +231,31 @@ async function init() {
         <div class="ticker-track">
           <span>${g.artist_name||'JUDAS'}</span><span class="dot">✦</span>
           <span>${s.title||'LYING THIEF'}</span><span class="dot">✦</span>
-          <span>SUMMER 2026</span><span class="dot">✦</span>
+          <span>6/26/26</span><span class="dot">✦</span>
           <span>QUEER POP</span><span class="dot">✦</span>
-          <span>${g.instagram||'@APRETTYSOB'}</span><span class="dot">✦</span>
+          <span>${instaHandle.toUpperCase()}</span><span class="dot">✦</span>
           <span>${g.artist_name||'JUDAS'}</span><span class="dot">✦</span>
           <span>${s.title||'LYING THIEF'}</span><span class="dot">✦</span>
-          <span>SUMMER 2026</span><span class="dot">✦</span>
+          <span>6/26/26</span><span class="dot">✦</span>
           <span>QUEER POP</span><span class="dot">✦</span>
-          <span>${g.instagram||'@APRETTYSOB'}</span><span class="dot">✦</span>
+          <span>${instaHandle.toUpperCase()}</span><span class="dot">✦</span>
         </div>
       </div>
     </header>
 
-    <!-- ABOUT -->
-    <section id="about">
-      <div class="about-img reveal">
-        <img src="${g.about_image||'/images/Judas_3.jpg'}" alt="${g.artist_name||'Judas'} artist photo" />
-      </div>
-      <div class="about-text">
-        <span class="section-label">The Artist</span>
-        <h2>Who Is<br><span class="accent">Judas?</span></h2>
-        <p class="reveal">${g.bio1||''}</p>
-        <p class="reveal reveal-delay-1">${g.bio2||''}</p>
-        <p class="reveal reveal-delay-2">${g.bio3||''}</p>
-        <div class="stat-row reveal reveal-delay-3">
-          <div class="stat"><div class="stat-num">5K</div><div class="stat-label">Debut crowd</div></div>
-          <div class="stat"><div class="stat-num">2</div><div class="stat-label">Singles — '26</div></div>
-          <div class="stat"><div class="stat-num">SF</div><div class="stat-label">Based</div></div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- MUSIC -->
+    <!-- MUSIC — first in page order per #5 -->
     <section id="music">
       <div>
         <span class="section-label">Debut Single</span>
         <div class="single-grid">
           <div class="cover-wrap reveal">
             <img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="${s.title||'Lying Thief'} cover art" />
-            <div class="release-badge">${s.release_info||'Out Summer 2026'}</div>
+            <div class="release-badge">6/26/26</div>
           </div>
           <div class="single-info">
             <div class="artist-name">${g.artist_name||'Judas'}</div>
             <h3 class="reveal">${(s.title||'LYING THIEF').replace(' ','<br><span class="stroke">').replace(/$/,'</span>')}</h3>
-            <p class="reveal reveal-delay-1">${s.description||''}</p>
+            <p class="reveal reveal-delay-1">Lying Thief is a scandalous club confession celebrating power and desire, drawing from the dark-pop energy of Charli XCX &amp; Slayyyter. Judas lures you onto the dance floor, his lips brushing against yours, close enough to taste. He captures your burning desire, and just as you want more, he disappears like a thief into the night. It's the best kiss you never had. Judas doesn't hold back on this all-important debut single, delivering electropop with claws. Let Lying Thief's intoxicating beats beckon you in and lose yourself to its siren call.</p>
             <div class="single-links reveal reveal-delay-2">${streamLinks}</div>
           </div>
         </div>
@@ -346,8 +266,24 @@ async function init() {
     <!-- PRESS QUOTE -->
     <div class="press-strip">
       <blockquote>"${g.press_quote||'Queer Popstar!'}"</blockquote>
-      <cite>— ${g.press_quote_source||'Grid News'}</cite>
+      <cite>${g.press_quote_source||'Grid News'}</cite>
     </div>
+
+    <!-- ABOUT — #9 new bio, #10 no stats -->
+    <section id="about">
+      <div class="about-img reveal">
+        <img src="${g.about_image||'/images/Judas_3.jpg'}" alt="${g.artist_name||'Judas'} artist photo" />
+      </div>
+      <div class="about-text">
+        <span class="section-label">The Artist</span>
+        <h2>Who Is<br><span class="accent">Judas?</span></h2>
+        <p class="reveal">Judas is the part of you that refuses to apologize. Sexy, savage, fluid, free. Everything you were taught to keep quiet. Electropop with claws: nasty beats, glitchy synths, propulsive energy, seductive to the core. Hot pink distortion. His corrupted pop possesses your body to move and your voice to take up space.</p>
+        <p class="reveal reveal-delay-1">Judas exploded onto the scene with a debut performance to thousands at Electroluxx Pride in San Francisco. Full production, iconic visuals and full choreography from day one. A queer pop provocateur, he exists for the parts of us that shrink to make others comfortable. Judas beckons you to embrace your power.</p>
+        <p class="reveal reveal-delay-2">A fallen angel born under 666, he sacrificed his halo to set the stage on fire. Canadian-born and world-traveled, he's spent his life carving a path entirely his own, now SF and LA based. His debut single, "Lying Thief" will break all the rules on June 26, 2026. Trouble is on the way.</p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
 
     <!-- PHOTOS -->
     <section id="photos">
@@ -357,100 +293,72 @@ async function init() {
         <div class="photo-grid">
           <div class="photo-item p1 reveal"><img src="/images/Judas_1.jpg" alt="Press photo 1" /></div>
           <div class="photo-item p2 reveal reveal-delay-1"><img src="/images/Judas_3.jpg" alt="Press photo 2" /></div>
-          <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/Judas_2.jpg" alt="Press photo 3" /></div>
-          <div class="photo-item p4 reveal"><img src="/images/touch_5.jpg" alt="Live photo" /></div>
-          <div class="photo-item p5 reveal reveal-delay-1"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" /></div>
-          <div class="photo-item p4 reveal"><img src="/images/body_art_edited.jpg" alt="Body art photo" style="object-position:center center;object-fit:contain;background:#0a0a0a;" /></div>
-          <div class="photo-item p3 reveal reveal-delay-1"><img src="/images/red_2_edited.jpg" alt="Red photo" style="transform:rotate(90deg) scale(1.6);transform-origin:center center;" /></div>
-          <div class="photo-item p5 reveal reveal-delay-2"><img src="/images/studo_2_edited.jpg" alt="Studio photo" style="object-position:center bottom;" /></div>
+          <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/touch_5.jpg" alt="Press photo 3" /></div>
+          <div class="photo-item p5 reveal"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" /></div>
+          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/Judas_2.jpg" alt="Press photo 4" /></div>
+          <div class="photo-item p3 reveal"><img src="/images/studo_2_edited.jpg" alt="Studio photo" style="object-fit:contain;object-position:center;background:#0a0a0a;" /></div>
+          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/body_art_edited.jpg" alt="Body art photo" style="object-fit:contain;object-position:center;background:#0a0a0a;" /></div>
+          <div class="photo-item p5 reveal reveal-delay-2"><img src="/images/red_2_edited.jpg" alt="Red photo" style="object-fit:contain;object-position:center;background:#0a0a0a;transform:rotate(90deg) scale(0.75);transform-origin:center center;" /></div>
         </div>
         <p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:rgba(245,240,240,.35);margin-top:24px;text-align:right;">
-          High-res assets: <a href="mailto:${g.email||'judas@aprettysob.com'}" style="color:var(--blue);text-decoration:none;">${g.email||'judas@aprettysob.com'}</a>
+          High-res assets: <a href="mailto:${email}" style="color:var(--blue);text-decoration:none;">${email}</a>
         </p>
       </div>
     </section>
 
     <div class="divider"></div>
 
-    <!-- LIVE -->
-    <section id="live">
-      <div class="live-header reveal">
-        <div>
-          <span class="section-label">On Stage</span>
-          <h2>Live<br><span class="accent">Dates</span></h2>
-        </div>
-        <a href="#contact" class="btn btn-outline">Book a Show</a>
-      </div>
-      <ul class="show-list">${showsHTML}</ul>
-    </section>
-
-    <!-- CONTACT -->
+    <!-- CONTACT — #12: email + instagram + location only, button links, no form, no booking -->
     <section id="contact">
       <div>
-        <div class="contact-left reveal">
+        <div class="reveal">
           <span class="section-label">Get in Touch</span>
-          <h2>Press &amp;<br><span class="accent">Booking</span></h2>
-          <p>For booking, press, sync licensing, collaborations, or general inquiries.</p>
+          <h2>Press &amp;<br><span class="accent">Contact</span></h2>
           <ul class="contact-info">
-            <li><span class="contact-label">Email</span><span class="contact-val"><a href="mailto:${g.email||'judas@aprettysob.com'}">${g.email||'judas@aprettysob.com'}</a></span></li>
-            <li><span class="contact-label">Instagram</span><span class="contact-val"><a href="https://instagram.com/${(g.instagram||'@aprettysob').replace('@','')}" target="_blank">${g.instagram||'@aprettysob'}</a></span></li>
-            <li><span class="contact-label">Location</span><span class="contact-val">${g.location||'San Francisco, CA'}</span></li>
-            <li><span class="contact-label">Booking</span><span class="contact-val">Open for 2026 dates</span></li>
+            <li>
+              <span class="contact-label">Email</span>
+              <span class="contact-val"><a href="mailto:${email}" class="contact-btn">${email}</a></span>
+            </li>
+            <li>
+              <span class="contact-label">Instagram</span>
+              <span class="contact-val"><a href="https://instagram.com/${instaSlug}" class="contact-btn" target="_blank">${instaHandle}</a></span>
+            </li>
+            <li>
+              <span class="contact-label">Location</span>
+              <span class="contact-val">San Francisco &amp; Los Angeles</span>
+            </li>
           </ul>
-        </div>
-        <div class="contact-right reveal reveal-delay-1">
-          <input type="text" placeholder="Your name" id="cf-name" />
-          <input type="email" placeholder="Email address" id="cf-email" />
-          <input type="text" placeholder="Subject (Booking / Press / Other)" id="cf-subject" />
-          <textarea placeholder="Tell us more..." id="cf-msg"></textarea>
-          <button onclick="handleContact('${g.email||'judas@aprettysob.com'}')">Send Message</button>
         </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- FOOTER — #13: no social buttons, #14: TV static canvas -->
     <div class="footer-wrap">
-      <canvas class="glitch-canvas" id="glitchCanvas"></canvas>
+      <canvas id="footerCanvas"></canvas>
       <footer>
         <div class="footer-logo">JUD<span>A</span>S</div>
         <div class="footer-copy">© 2026 JUDAS JAMES. ALL RIGHTS RESERVED.</div>
-        <div class="footer-socials">
-          <a href="https://instagram.com/${(g.instagram||'@aprettysob').replace('@','')}" target="_blank">Instagram</a>
-          <a href="mailto:${g.email||'judas@aprettysob.com'}">Email</a>
-        </div>
       </footer>
     </div>
   `;
 
-  // cursor hover
   document.querySelectorAll('a,button,input,textarea').forEach(el=>{
     el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';cursor.style.background='var(--blue)';});
     el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';cursor.style.background='var(--pink)';});
   });
 
-  // scroll reveal
   const obs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
   },{threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-  // init both canvases
   setTimeout(()=>{
     initMusicCross();
-    initGlitch();
+    initFooterStatic();
   },100);
 }
 
-function handleContact(email) {
-  const name=document.getElementById('cf-name').value.trim();
-  const mail=document.getElementById('cf-email').value.trim();
-  const subject=document.getElementById('cf-subject').value.trim();
-  const msg=document.getElementById('cf-msg').value.trim();
-  if(!name||!mail||!msg){alert('Please fill in name, email, and message.');return;}
-  window.location.href=`mailto:${email}?subject=${encodeURIComponent(subject||'EPK Inquiry')}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+mail+'\n\n'+msg)}`;
-}
-
-// ── MUSIC CROSS ANIMATION ────────────────────────────
+// ── MUSIC CROSS — stationary, glitch in/out, shadow silhouette + shatter lines ──
 function initMusicCross() {
   const canvas = document.getElementById('musicCrossCanvas');
   if (!canvas) return;
@@ -471,7 +379,6 @@ function initMusicCross() {
     baseX  = canvas.width  * 0.68 - crossW / 2;
     baseY  = canvas.height * 0.5  - crossH / 2;
   }
-
   resize();
   window.addEventListener('resize', resize);
 
@@ -479,43 +386,29 @@ function initMusicCross() {
     const oc = document.createElement('canvas');
     oc.width = 100; oc.height = 300;
     const c = oc.getContext('2d');
-    c.clearRect(0, 0, 100, 300);
-
-    const cx = 50, stemW = 10;
-    // upside-down cross: crossbar 65% down
-    const cbY = 300 * 0.65, cbW = 80, cbH = 9;
-
-    function jitter(x1,y1,x2,y2,w,a) {
-      const steps = 10 + Math.floor(Math.random()*6);
+    c.clearRect(0,0,100,300);
+    const cx=50, stemW=10, cbY=300*0.65, cbW=80, cbH=9;
+    function jitter(x1,y1,x2,y2,w,a){
+      const steps=10+Math.floor(Math.random()*6);
       c.beginPath();
-      c.moveTo(x1+(Math.random()-.5)*2, y1+(Math.random()-.5)*2);
+      c.moveTo(x1+(Math.random()-.5)*2,y1+(Math.random()-.5)*2);
       for(let i=1;i<=steps;i++){
         const t=i/steps;
-        c.lineTo(x1+(x2-x1)*t+(Math.random()-.5)*2.2, y1+(y2-y1)*t+(Math.random()-.5)*2.2);
+        c.lineTo(x1+(x2-x1)*t+(Math.random()-.5)*2.2,y1+(y2-y1)*t+(Math.random()-.5)*2.2);
       }
       c.strokeStyle=`rgba(255,45,139,${a})`;
-      c.lineWidth=w;
-      c.lineCap='round';
-      c.lineJoin='round';
-      c.shadowColor=PINK;
-      c.shadowBlur=10;
-      c.stroke();
+      c.lineWidth=w; c.lineCap='round'; c.lineJoin='round';
+      c.shadowColor=PINK; c.shadowBlur=10; c.stroke();
     }
-
-    // vertical passes
     for(let p=0;p<5;p++) jitter(cx+(Math.random()-.5)*2,4,cx+(Math.random()-.5)*2,296,stemW-p*1.2,0.5-p*0.05);
     jitter(cx,4,cx,296,2,0.95);
     jitter(cx-stemW*.45,10,cx-stemW*.4,290,0.7,0.28);
     jitter(cx+stemW*.45,8,cx+stemW*.42,288,0.7,0.24);
-
-    // crossbar passes
     const cx1=(100-cbW)/2, cx2=cx1+cbW;
     for(let p=0;p<4;p++) jitter(cx1,cbY+(Math.random()-.5)*1.5,cx2,cbY+(Math.random()-.5)*1.5,cbH-p*1.2,0.5-p*0.06);
     jitter(cx1,cbY,cx2,cbY,2,0.92);
     jitter(cx1+4,cbY-cbH*.4,cx2-4,cbY-cbH*.38,0.6,0.25);
     jitter(cx1+4,cbY+cbH*.4,cx2-4,cbY+cbH*.38,0.6,0.22);
-
-    // white hot core
     c.shadowBlur=0; c.globalAlpha=0.18; c.strokeStyle='#fff'; c.lineWidth=1;
     c.beginPath(); c.moveTo(cx,8); c.lineTo(cx,292); c.stroke();
     c.beginPath(); c.moveTo(cx1+8,cbY); c.lineTo(cx2-8,cbY); c.stroke();
@@ -524,27 +417,28 @@ function initMusicCross() {
   }
 
   let crossSrc = makeCross();
-  let shadows=[], fragments=[];
-  let curX=0,curY=0,targetX=0,targetY=0;
-  let glitchActive=false,glitchTimer=0,glitchDuration=0;
-  let frameCount=0,lastGlitch=-9999;
+  // persistent dim shadow silhouette
+  let shadowAlpha = 0;
+  let shatterLines = [];
+  let frameCount=0, lastGlitch=-9999;
   const GLITCH_INTERVAL=220;
   const FADE_DELAY=55;
-  let globalAlpha=0,fadeInDone=false;
+  let globalAlpha=0, fadeInDone=false;
+  // glitch state: cross blinks in and out
+  let visible=true, glitchTimer=0, glitchPhase='idle';
+  // glitchPhase: idle → out → in → idle
 
-  // set initial position after setupCross
-  setupCross();
-  curX=baseX; curY=baseY; targetX=baseX; targetY=baseY;
-
-  function spawnFragments(x,y){
-    for(let i=0;i<14+Math.random()*10;i++){
-      fragments.push({
-        x:x+Math.random()*crossW, y:y+Math.random()*crossH,
-        w:1+Math.random()*10, h:1+Math.random()*4,
-        vx:(Math.random()-.5)*3.5, vy:(Math.random()-.5)*2.5,
-        alpha:0.6+Math.random()*0.4,
-        color:Math.random()>.45?PINK:BLUE,
-        life:1, decay:0.025+Math.random()*0.04
+  function spawnShatter() {
+    for(let i=0;i<10+Math.random()*8;i++){
+      const angle=Math.random()*Math.PI*2;
+      const len=20+Math.random()*60;
+      shatterLines.push({
+        x: baseX + crossW*0.5 + (Math.random()-.5)*crossW*0.8,
+        y: baseY + crossH*0.5 + (Math.random()-.5)*crossH*0.5,
+        angle, len,
+        alpha: 0.5+Math.random()*0.4,
+        color: Math.random()>.5?PINK:BLUE,
+        life:1, decay:0.03+Math.random()*0.04
       });
     }
   }
@@ -557,131 +451,138 @@ function initMusicCross() {
       if(frameCount>FADE_DELAY){ globalAlpha+=0.014; if(globalAlpha>=1){globalAlpha=1;fadeInDone=true;} }
     }
 
-    if(fadeInDone&&!glitchActive&&frameCount-lastGlitch>GLITCH_INTERVAL){
-      glitchActive=true; glitchTimer=0;
-      glitchDuration=18+Math.random()*32;
-      lastGlitch=frameCount;
-      const drift=55+Math.random()*60;
-      const angle=Math.random()*Math.PI*2;
-      targetX=baseX+Math.cos(angle)*drift;
-      targetY=baseY+Math.sin(angle)*drift;
-      spawnFragments(curX,curY);
-      if(Math.random()>.5) crossSrc=makeCross();
+    // trigger glitch cycle
+    if(fadeInDone && glitchPhase==='idle' && frameCount-lastGlitch>GLITCH_INTERVAL){
+      glitchPhase='out'; glitchTimer=0; lastGlitch=frameCount;
+      if(Math.random()>.4) crossSrc=makeCross();
     }
 
-    if(glitchActive){
+    if(glitchPhase==='out'){
       glitchTimer++;
-      curX+=(targetX-curX)*.16;
-      curY+=(targetY-curY)*.16;
-      if(glitchTimer>glitchDuration) glitchActive=false;
-    } else {
-      curX+=(baseX-curX)*.05;
-      curY+=(baseY-curY)*.05;
+      // flicker out over ~20 frames
+      if(glitchTimer>20){ glitchPhase='in'; glitchTimer=0; visible=false; spawnShatter(); shadowAlpha=0.22; }
+    } else if(glitchPhase==='in'){
+      glitchTimer++;
+      // stay invisible 10-30 frames then flicker back
+      if(glitchTimer>10+Math.random()*20){ glitchPhase='idle'; glitchTimer=0; visible=true; spawnShatter(); }
     }
 
-    for(let i=shadows.length-1;i>=0;i--){
-      const s=shadows[i]; s.alpha-=0.006;
-      if(s.alpha<=0){shadows.splice(i,1);continue;}
-      ctx.save(); ctx.globalAlpha=s.alpha*globalAlpha;
-      ctx.drawImage(crossSrc,s.x,s.y,crossW,crossH); ctx.restore();
-    }
-    if(glitchActive&&glitchTimer%5===0) shadows.push({x:curX,y:curY,alpha:0.13+Math.random()*.1});
-
-    const flicker=glitchActive?(glitchTimer%4<2?1:0.35):1;
-    const mainA=globalAlpha*flicker*(0.78+Math.sin(frameCount*.018)*.07);
-
-    if(glitchActive){
-      ctx.save(); ctx.globalAlpha=mainA*.36; ctx.globalCompositeOperation='screen';
-      ctx.drawImage(crossSrc,curX-4,curY+1,crossW,crossH); ctx.restore();
-      ctx.save(); ctx.globalAlpha=mainA*.36; ctx.globalCompositeOperation='screen';
-      ctx.drawImage(crossSrc,curX+4,curY-1,crossW,crossH); ctx.restore();
+    // fade shadow silhouette
+    if(shadowAlpha>0){
+      ctx.save(); ctx.globalAlpha=shadowAlpha*globalAlpha;
+      ctx.drawImage(crossSrc,baseX,baseY,crossW,crossH);
+      ctx.restore();
+      shadowAlpha-=0.003;
     }
 
-    ctx.save(); ctx.globalAlpha=mainA;
-    ctx.drawImage(crossSrc,curX,curY,crossW,crossH); ctx.restore();
-
-    if(glitchActive&&Math.random()>.65){
-      const sY=Math.random()*crossH, sH=1+Math.random()*7;
-      const off=(Math.random()-.5)*18;
-      ctx.save(); ctx.globalAlpha=(0.4+Math.random()*.3)*globalAlpha;
-      ctx.drawImage(crossSrc,0,sY*(crossSrc.height/crossH),crossSrc.width,sH*(crossSrc.height/crossH),curX+off,curY+sY,crossW,sH);
+    // shatter lines
+    for(let i=shatterLines.length-1;i>=0;i--){
+      const l=shatterLines[i];
+      l.life-=l.decay;
+      if(l.life<=0){shatterLines.splice(i,1);continue;}
+      ctx.save();
+      ctx.globalAlpha=l.alpha*l.life*globalAlpha;
+      ctx.strokeStyle=l.color;
+      ctx.lineWidth=1;
+      ctx.shadowColor=l.color; ctx.shadowBlur=4;
+      ctx.beginPath();
+      ctx.moveTo(l.x,l.y);
+      ctx.lineTo(l.x+Math.cos(l.angle)*l.len*l.life,l.y+Math.sin(l.angle)*l.len*l.life);
+      ctx.stroke();
       ctx.restore();
     }
 
-    for(let i=fragments.length-1;i>=0;i--){
-      const f=fragments[i];
-      f.x+=f.vx; f.y+=f.vy; f.life-=f.decay; f.vx*=.94; f.vy*=.94;
-      if(f.life<=0){fragments.splice(i,1);continue;}
-      ctx.save(); ctx.globalAlpha=f.alpha*f.life*globalAlpha;
-      ctx.fillStyle=f.color;
-      ctx.fillRect(Math.round(f.x),Math.round(f.y),f.w,f.h); ctx.restore();
+    // main cross
+    if(visible){
+      const flicker = glitchPhase==='out'?(glitchTimer%3<2?1:0.2):1;
+      const mainA = globalAlpha*flicker*(0.78+Math.sin(frameCount*.018)*.07);
+      // chromatic aberration during out phase
+      if(glitchPhase==='out'){
+        ctx.save(); ctx.globalAlpha=mainA*.4; ctx.globalCompositeOperation='screen';
+        ctx.drawImage(crossSrc,baseX-4,baseY+1,crossW,crossH); ctx.restore();
+        ctx.save(); ctx.globalAlpha=mainA*.4; ctx.globalCompositeOperation='screen';
+        ctx.drawImage(crossSrc,baseX+4,baseY-1,crossW,crossH); ctx.restore();
+      }
+      ctx.save(); ctx.globalAlpha=mainA;
+      ctx.drawImage(crossSrc,baseX,baseY,crossW,crossH); ctx.restore();
     }
 
     requestAnimationFrame(loop);
   }
-
   loop();
 }
 
-// ── GLITCH CANVAS (footer) ───────────────────────────
-function initGlitch() {
-  const canvas=document.getElementById('glitchCanvas');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
+// ── FOOTER TV STATIC ────────────────────────────────
+function initFooterStatic() {
+  const canvas = document.getElementById('footerCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize(){
+    canvas.width=canvas.offsetWidth;
+    canvas.height=canvas.offsetHeight;
+  }
   resize();
   window.addEventListener('resize',resize);
-  const PINK='#FF2D8B',BLUE='#00F0FF',WHITE='#F5F0F0';
-  class Crack{
-    constructor(){this.reset();}
-    reset(){
-      this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;
-      this.segs=[];this.len=6+Math.floor(Math.random()*12);
-      this.color=Math.random()>.5?PINK:(Math.random()>.5?BLUE:WHITE);
-      this.alpha=0;this.maxAlpha=0.4+Math.random()*0.55;
-      this.phase='in';this.holdT=0;this.maxHold=8+Math.random()*30;
-      this.speed=0.04+Math.random()*0.06;this.glitterCount=Math.floor(Math.random()*6);
-      let cx=this.x,cy=this.y;
-      for(let i=0;i<this.len;i++){
-        const angle=(Math.random()*Math.PI*0.6)-Math.PI*0.3+(Math.PI/2);
-        const dist=4+Math.random()*18;
-        cx+=Math.cos(angle)*dist;cy+=Math.sin(angle)*dist;
-        this.segs.push({x:cx,y:cy});
-      }
-      this.pixels=Array.from({length:3+Math.floor(Math.random()*6)},()=>({
-        x:this.x+(Math.random()-.5)*80,y:this.y+Math.random()*60,
-        w:2+Math.floor(Math.random()*8),h:1+Math.floor(Math.random()*4),
-        c:Math.random()>.5?PINK:BLUE,
-      }));
-    }
-    draw(){
-      if(this.segs.length===0)return;
-      ctx.save();ctx.globalAlpha=this.alpha;
-      for(let offset of [[-1,0,'rgba(0,240,255,0.4)'],[1,0,'rgba(255,45,139,0.4)'],[0,0,this.color]]){
-        ctx.beginPath();ctx.moveTo(this.x+offset[0],this.y+offset[1]);
-        for(const s of this.segs)ctx.lineTo(s.x+offset[0],s.y+offset[1]);
-        ctx.strokeStyle=offset[2];ctx.lineWidth=offset[2]===this.color?1.5:0.8;
-        ctx.shadowColor=this.color;ctx.shadowBlur=8;ctx.stroke();
-      }
-      for(const p of this.pixels){
-        ctx.fillStyle=p.c;ctx.shadowColor=p.c;ctx.shadowBlur=6;
-        ctx.fillRect(Math.round(p.x),Math.round(p.y),p.w,p.h);
-      }
-      const sparkPoints=this.segs.filter((_,i)=>i%Math.max(1,Math.floor(this.segs.length/this.glitterCount))===0);
-      for(const sp of sparkPoints){
-        ctx.beginPath();ctx.arc(sp.x,sp.y,1+Math.random()*1.5,0,Math.PI*2);
-        ctx.fillStyle=WHITE;ctx.shadowColor=PINK;ctx.shadowBlur=10;ctx.fill();
-      }
-      ctx.restore();
-    }
-    update(){
-      if(this.phase==='in'){this.alpha+=this.speed;if(this.alpha>=this.maxAlpha){this.alpha=this.maxAlpha;this.phase='hold';}}
-      else if(this.phase==='hold'){this.holdT++;this.alpha=this.maxAlpha*(0.85+Math.random()*0.15);if(this.holdT>this.maxHold)this.phase='out';}
-      else{this.alpha-=this.speed*0.7;if(this.alpha<=0)this.reset();}
-    }
+
+  const COLORS = [
+    [10,10,10],       // black
+    [245,240,240],    // white
+    [255,45,139],     // pink
+    [0,240,255],      // blue
+  ];
+
+  let phase=0, phaseT=0;
+  const PHASE_DURATION=180; // frames per colour
+  let fromColor=COLORS[0], toColor=COLORS[1];
+  let colorIdx=0;
+
+  function lerpColor(a,b,t){
+    return [
+      Math.round(a[0]+(b[0]-a[0])*t),
+      Math.round(a[1]+(b[1]-a[1])*t),
+      Math.round(a[2]+(b[2]-a[2])*t),
+    ];
   }
-  const cracks=Array.from({length:18},()=>{const c=new Crack();c.alpha=Math.random()*c.maxAlpha;return c;});
-  function loop(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const c of cracks){c.update();c.draw();}requestAnimationFrame(loop);}
+
+  function loop(){
+    const W=canvas.width, H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+
+    // advance colour phase
+    phaseT++;
+    if(phaseT>PHASE_DURATION){
+      phaseT=0; colorIdx=(colorIdx+1)%COLORS.length;
+      fromColor=COLORS[colorIdx];
+      toColor=COLORS[(colorIdx+1)%COLORS.length];
+    }
+    const t=phaseT/PHASE_DURATION;
+    const bg=lerpColor(fromColor,toColor,t);
+
+    // fill bg
+    ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;
+    ctx.fillRect(0,0,W,H);
+
+    // TV static noise
+    const imgData=ctx.getImageData(0,0,W,H);
+    const d=imgData.data;
+    for(let i=0;i<d.length;i+=4){
+      const noise=(Math.random()-.5)*120;
+      d[i]  =Math.min(255,Math.max(0,d[i]+noise));
+      d[i+1]=Math.min(255,Math.max(0,d[i+1]+noise));
+      d[i+2]=Math.min(255,Math.max(0,d[i+2]+noise));
+      d[i+3]=255;
+    }
+    ctx.putImageData(imgData,0,0);
+
+    // scanlines
+    for(let y=0;y<H;y+=2){
+      ctx.fillStyle='rgba(0,0,0,0.08)';
+      ctx.fillRect(0,y,W,1);
+    }
+
+    requestAnimationFrame(loop);
+  }
   loop();
 }
 
