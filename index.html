@@ -116,12 +116,14 @@
     .press-strip cite { font-family:var(--font-mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.55); }
 
     #contact { background:var(--grey);padding:100px 0; }
-    #contact > div { max-width:700px;margin:0 auto;padding:0 40px; }
+    #contact > div { max-width:700px;margin:0 auto;padding:0 40px;text-align:center; }
+    #contact h2 { text-align:center; }
+    #contact .section-label { text-align:center; }
     .contact-info { list-style:none;margin-top:20px; }
-    .contact-info li { padding:18px 0;border-bottom:1px solid var(--grey2);display:flex;gap:20px;align-items:center; }
+    .contact-info li { padding:18px 0;border-bottom:1px solid var(--grey2);display:flex;flex-direction:column;align-items:center;gap:10px; }
     .contact-info li:first-child { border-top:1px solid var(--grey2); }
-    .contact-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);min-width:100px; }
-    .contact-val { font-size:15px;color:var(--white); }
+    .contact-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue); }
+    .contact-val { font-size:15px;color:var(--white);text-align:center; }
     .contact-btn { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:11px 22px;background:var(--pink);color:var(--black);text-decoration:none;font-weight:700;transition:all .2s;cursor:none;display:inline-block; }
     .contact-btn:hover { background:var(--blue);box-shadow:0 0 20px rgba(0,240,255,.4); }
 
