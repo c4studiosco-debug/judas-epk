@@ -24,8 +24,9 @@
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--white); font-family: var(--font-body); overflow-x: hidden; cursor: none; }
 
-    .cursor { width:12px;height:12px;border-radius:50%;background:var(--pink);position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .15s ease,background .2s;transform:translate(-50%,-50%); }
-    .cursor-ring { width:36px;height:36px;border-radius:50%;border:1.5px solid var(--blue);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:transform .35s cubic-bezier(.17,.67,.83,.67);transform:translate(-50%,-50%);opacity:.7; }
+    /* cursor — uses transform3d for GPU compositing, no layout thrash */
+    .cursor { width:12px;height:12px;border-radius:50%;background:var(--pink);position:fixed;top:0;left:0;pointer-events:none;z-index:9999;will-change:transform;transform:translate3d(-50%,-50%,0);transition:transform .12s ease,background .15s; }
+    .cursor-ring { width:36px;height:36px;border-radius:50%;border:1.5px solid var(--blue);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;will-change:transform;transform:translate3d(-50%,-50%,0);opacity:.7; }
 
     nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:linear-gradient(to bottom,rgba(10,10,10,.95),transparent);backdrop-filter:blur(4px); }
     .nav-logo { font-family:var(--font-display);font-size:26px;letter-spacing:.2em;color:var(--white);text-decoration:none; }
@@ -34,7 +35,6 @@
     .nav-links a { font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--white);text-decoration:none;opacity:.7;transition:opacity .2s,color .2s; }
     .nav-links a:hover { opacity:1;color:var(--pink); }
 
-    /* #1 sharper hero image */
     #hero { min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden; }
     .hero-left { display:flex;flex-direction:column;justify-content:flex-end;padding:120px 60px 80px;position:relative;z-index:2; }
     .hero-tag { font-family:var(--font-mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--blue);margin-bottom:20px;opacity:0;animation:fadeUp .8s .3s forwards; }
@@ -51,7 +51,6 @@
     .btn-outline:hover { background:rgba(0,240,255,.1);box-shadow:0 0 30px rgba(0,240,255,.3); }
     .hero-right { position:relative;overflow:hidden; }
     .hero-img-wrap { position:absolute;inset:0; }
-    /* #1: sharper — higher contrast, no grain, deep blacks */
     .hero-img-wrap img { width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.4) brightness(0.88); }
     .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,139,.2) 0%,rgba(0,240,255,.1) 100%);mix-blend-mode:screen; }
     .hero-img-fade { position:absolute;left:0;top:0;bottom:0;width:200px;background:linear-gradient(to right,var(--black),transparent); }
@@ -90,11 +89,13 @@
     .stream-btn { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:12px 22px;border:1px solid var(--grey2);color:var(--white);text-decoration:none;transition:all .2s;cursor:none; }
     .stream-btn:hover { border-color:var(--pink);color:var(--pink);box-shadow:0 0 20px rgba(255,45,139,.2); }
     .stream-btn[href=""] { display:none; }
-    #musicCrossCanvas { display:none; }
 
+    /* photos section */
     #photos { padding:100px 40px;position:relative;overflow:hidden; }
     #photosCanvas { position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0; }
-    #photos > div { max-width:1400px;margin:0 auto;position:relative;z-index:1; }
+    /* scanlines via CSS — zero JS cost */
+    #photos::after { content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.07) 0px,rgba(0,0,0,0.07) 1px,transparent 1px,transparent 2px);pointer-events:none;z-index:2; }
+    #photos > div { max-width:1400px;margin:0 auto;position:relative;z-index:3; }
     .photo-grid { display:grid;grid-template-columns:repeat(12,1fr);gap:12px; }
     .photo-item { overflow:hidden;position:relative;cursor:none; }
     .photo-item img { width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(100%) contrast(1.05);transition:filter .4s ease,transform .6s cubic-bezier(.17,.67,.38,1.3); }
@@ -104,7 +105,7 @@
     .p1{grid-column:span 5;aspect-ratio:3/4}
     .p2{grid-column:span 4;aspect-ratio:1/1;align-self:end}
     .p3{grid-column:span 3;aspect-ratio:2/3}
-    .p4{grid-column:span 7;aspect-ratio:4/3;}
+    .p4{grid-column:span 7;aspect-ratio:4/3}
     .p5{grid-column:span 5;aspect-ratio:4/3}
 
     .press-strip { background:var(--pink);padding:60px 40px;text-align:center;position:relative;overflow:hidden; }
@@ -114,7 +115,6 @@
     @keyframes wordFlash { 0%,49%{color:var(--black)} 50%,100%{color:var(--white)} }
     .press-strip cite { font-family:var(--font-mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.55); }
 
-    /* #12 contact — simplified, no form, no grid */
     #contact { background:var(--grey);padding:100px 0; }
     #contact > div { max-width:700px;margin:0 auto;padding:0 40px; }
     .contact-info { list-style:none;margin-top:20px; }
@@ -125,9 +125,10 @@
     .contact-btn { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:11px 22px;background:var(--pink);color:var(--black);text-decoration:none;font-weight:700;transition:all .2s;cursor:none;display:inline-block; }
     .contact-btn:hover { background:var(--blue);box-shadow:0 0 20px rgba(0,240,255,.4); }
 
-    /* #14 footer static */
     .footer-wrap { position:relative;overflow:hidden;background:var(--black); }
     #footerCanvas { position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0; }
+    /* scanlines via CSS on footer too */
+    .footer-wrap::after { content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.07) 0px,rgba(0,0,0,0.07) 1px,transparent 1px,transparent 2px);pointer-events:none;z-index:1; }
     footer { padding:50px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--grey2);position:relative;z-index:2; }
     .footer-logo { font-family:var(--font-display);font-size:32px;mix-blend-mode:difference;color:var(--white); }
     .footer-copy { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-align:center;mix-blend-mode:difference;color:var(--white); }
@@ -139,7 +140,7 @@
     .reveal-delay-3 { transition-delay:.45s; }
     .loading { display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:var(--font-display);font-size:40px;color:var(--pink);letter-spacing:.2em; }
 
-    /* ── HAMBURGER MENU (mobile only) ── */
+    /* hamburger */
     .nav-hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:200; }
     .nav-hamburger span { display:block;width:24px;height:2px;background:var(--white);transition:all .3s; }
     .nav-hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
@@ -151,22 +152,16 @@
     .nav-mobile-menu a:hover { color:var(--pink); }
 
     @media(max-width:900px){
-      /* cursor off on touch */
       body { cursor:auto; }
       .cursor,.cursor-ring { display:none; }
-
-      /* nav */
       nav { padding:16px 20px; }
       .nav-links { display:none; }
       .nav-hamburger { display:flex; }
-
-      /* hero — show image as full bleed bg */
       #hero { grid-template-columns:1fr;min-height:100vh;position:relative; }
       .hero-right { display:block;position:absolute;inset:0;z-index:0; }
       .hero-img-wrap { position:absolute;inset:0; }
       .hero-img-wrap img { width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.4) brightness(0.88); }
       .hero-img-overlay { position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,45,139,.2),rgba(0,240,255,.1));mix-blend-mode:screen; }
-      /* dark gradient so text is readable over image */
       .hero-left { position:relative;z-index:2;padding:100px 24px 80px;background:linear-gradient(to top,rgba(10,10,10,.92) 60%,rgba(10,10,10,.4) 100%); }
       .hero-img-fade { display:none; }
       .hero-name { font-size:clamp(72px,18vw,120px); }
@@ -174,53 +169,33 @@
       .hero-cta { flex-direction:column;gap:12px; }
       .btn { text-align:center;padding:16px 24px; }
       .ticker-track span { font-size:15px;padding:0 18px; }
-
-      /* music */
       #music { padding:60px 20px; }
       .single-grid { grid-template-columns:1fr;gap:40px; }
       .cover-wrap img { max-width:300px;margin:0 auto;display:block; }
       .release-badge { top:-12px;right:0; }
       .single-info h3 { font-size:clamp(52px,14vw,90px); }
       .single-info p { font-size:14px; }
-      /* show cross canvas on mobile, full width behind single-info */
-      #musicCrossCanvas { display:block;position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.5; }
-
-      /* about */
       #about { grid-template-columns:1fr;padding:60px 20px;gap:0; }
-      /* show about image on mobile as banner */
       .about-img { display:block;margin-bottom:40px; }
       .about-img img { aspect-ratio:3/2;object-position:center top; }
       .about-img::before,.about-img::after { display:none; }
       .about-text p { font-size:15px; }
       h2 { font-size:clamp(48px,12vw,80px);margin-bottom:30px; }
-
-      /* photos — 2 col masonry feel */
       #photos { padding:60px 12px; }
       .photo-grid { grid-template-columns:1fr 1fr;gap:8px; }
       .p1,.p2,.p3,.p4,.p5 { grid-column:span 1; }
-      /* give each a consistent height on mobile */
       .photo-item { aspect-ratio:3/4; }
-      /* full-width for wider shots */
       .photo-item.p4 { grid-column:span 2;aspect-ratio:4/3; }
-
-      /* press strip */
       .press-strip { padding:40px 20px; }
-
-      /* contact */
       #contact { padding:60px 0; }
       #contact > div { padding:0 20px; }
       .contact-info li { flex-direction:column;align-items:flex-start;gap:10px;padding:16px 0; }
       .contact-btn { width:100%;text-align:center;padding:14px 20px; }
-
-      /* footer */
       footer { padding:40px 20px;flex-direction:column;gap:16px;text-align:center; }
       .footer-logo { font-size:28px; }
       .footer-copy { font-size:9px; }
-
-      /* section labels */
       .section-label { font-size:9px; }
     }
-
     @media(max-width:480px){
       .hero-name { font-size:clamp(60px,20vw,100px); }
       .single-info h3 { font-size:clamp(48px,16vw,80px); }
@@ -236,44 +211,54 @@
 <div id="app"><div class="loading">LOADING...</div></div>
 
 <script>
+// ── CURSOR — translate3d keeps it on GPU compositor thread ──
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
+let mx=0, my=0, rx=0, ry=0;
+
 document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
-});
-(function animRing(){
-  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
-  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate3d(calc(${mx}px - 50%), calc(${my}px - 50%), 0)`;
+}, { passive: true });
+
+(function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.transform = `translate3d(calc(${rx}px - 50%), calc(${ry}px - 50%), 0)`;
   requestAnimationFrame(animRing);
 })();
 
+// ── DEBOUNCE HELPER ──────────────────────────────────
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
 async function loadJSON(path) {
-  try { const r=await fetch(path); if(!r.ok) return null; return r.json(); } catch(e){ return null; }
+  try { const r = await fetch(path); if (!r.ok) return null; return r.json(); } catch(e) { return null; }
 }
 
 async function init() {
-  const [general,single]=await Promise.all([loadJSON('/content/general.json'),loadJSON('/content/single.json')]);
-  const g=general||{};
-  const s=single||{};
+  const [general, single] = await Promise.all([
+    loadJSON('/content/general.json'),
+    loadJSON('/content/single.json'),
+  ]);
+  const g = general || {};
+  const s = single  || {};
 
-  // streaming links — if none, show PRE-SAVE NOW button
-  const streamLinks=[
-    {key:'spotify',label:'Spotify'},
-    {key:'apple',label:'Apple Music'},
-    {key:'soundcloud',label:'SoundCloud'},
-    {key:'youtube',label:'YouTube'},
-  ].filter(l=>s[l.key])
-   .map(l=>`<a href="${s[l.key]}" class="stream-btn" target="_blank">${l.label}</a>`)
-   .join('')||`<a href="#contact" class="stream-btn" style="background:var(--pink);color:var(--black);border-color:var(--pink);font-weight:700;">PRE-SAVE NOW</a>`;
+  const streamLinks = [
+    { key:'spotify',    label:'Spotify' },
+    { key:'apple',      label:'Apple Music' },
+    { key:'soundcloud', label:'SoundCloud' },
+    { key:'youtube',    label:'YouTube' },
+  ].filter(l => s[l.key])
+   .map(l => `<a href="${s[l.key]}" class="stream-btn" target="_blank">${l.label}</a>`)
+   .join('') || `<a href="#contact" class="stream-btn" style="background:var(--pink);color:var(--black);border-color:var(--pink);font-weight:700;">PRE-SAVE NOW</a>`;
 
-  const email = g.email||'judas@aprettysob.com';
-  const instaHandle = g.instagram||'@aprettysob';
-  const instaSlug = instaHandle.replace('@','');
+  const email       = g.email    || 'judas@aprettysob.com';
+  const instaHandle = g.instagram|| '@aprettysob';
+  const instaSlug   = instaHandle.replace('@','');
 
-  document.getElementById('app').innerHTML=`
-    <!-- NAV — #5: Music, About, Press, Contact (no Live) -->
+  document.getElementById('app').innerHTML = `
     <nav>
       <a href="#hero" class="nav-logo">JUD<span>A</span>S</a>
       <ul class="nav-links">
@@ -287,26 +272,25 @@ async function init() {
       </div>
     </nav>
     <div class="nav-mobile-menu" id="mobileMenu">
-      <a href="#music" onclick="closeMenu()">Music</a>
-      <a href="#about" onclick="closeMenu()">About</a>
-      <a href="#photos" onclick="closeMenu()">Press</a>
+      <a href="#music"   onclick="closeMenu()">Music</a>
+      <a href="#about"   onclick="closeMenu()">About</a>
+      <a href="#photos"  onclick="closeMenu()">Press</a>
       <a href="#contact" onclick="closeMenu()">Contact</a>
     </div>
 
-    <!-- HERO -->
     <header id="hero">
       <div class="hero-left">
         <p class="hero-tag">Debut Single, 6/26/26</p>
         <h1 class="hero-name">JU<span class="stroke">D</span><span class="pink">AS</span></h1>
         <p class="hero-sub">${g.tagline||'Queer pop provocateur. Main character energy.'}</p>
         <div class="hero-cta">
-          <a href="#music" class="btn btn-primary">PRE-SAVE NOW</a>
-          <a href="#photos" class="btn btn-outline">PRESS KIT</a>
+          <a href="#music"   class="btn btn-primary">PRE-SAVE NOW</a>
+          <a href="#photos"  class="btn btn-outline">PRESS KIT</a>
         </div>
       </div>
       <div class="hero-right">
         <div class="hero-img-wrap">
-          <img src="${g.hero_image||'/images/Judas_2.jpg'}" alt="${g.artist_name||'Judas'} press photo" />
+          <img src="${g.hero_image||'/images/Judas_2.jpg'}" alt="${g.artist_name||'Judas'} press photo" fetchpriority="high" />
           <div class="hero-img-overlay"></div>
           <div class="hero-img-fade"></div>
         </div>
@@ -327,13 +311,12 @@ async function init() {
       </div>
     </header>
 
-    <!-- MUSIC — first in page order per #5 -->
     <section id="music">
       <div>
         <span class="section-label">Debut Single</span>
         <div class="single-grid">
           <div class="cover-wrap reveal">
-            <img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="${s.title||'Lying Thief'} cover art" />
+            <img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="${s.title||'Lying Thief'} cover art" loading="lazy" decoding="async" />
             <div class="release-badge">6/26/26</div>
           </div>
           <div class="single-info">
@@ -344,19 +327,16 @@ async function init() {
           </div>
         </div>
       </div>
-      <canvas id="musicCrossCanvas"></canvas>
     </section>
 
-    <!-- PRESS QUOTE -->
     <div class="press-strip">
       <blockquote>"<span class="flash-word">${g.press_quote||'Queer Popstar!'}</span>"</blockquote>
       <cite>${g.press_quote_source||'Grid News'}</cite>
     </div>
 
-    <!-- ABOUT — #9 new bio, #10 no stats -->
     <section id="about">
       <div class="about-img reveal">
-        <img src="${g.about_image||'/images/Judas_3.jpg'}" alt="${g.artist_name||'Judas'} artist photo" />
+        <img src="${g.about_image||'/images/Judas_3.jpg'}" alt="${g.artist_name||'Judas'} artist photo" loading="lazy" decoding="async" />
       </div>
       <div class="about-text">
         <span class="section-label">The Artist</span>
@@ -369,22 +349,21 @@ async function init() {
 
     <div class="divider"></div>
 
-    <!-- PHOTOS -->
     <section id="photos">
       <canvas id="photosCanvas"></canvas>
       <div>
         <span class="section-label">Press Photos</span>
         <h2 class="reveal">Press<br><span class="accent">Gallery</span></h2>
         <div class="photo-grid">
-          <div class="photo-item p1 reveal"><img src="/images/Judas_1.jpg" alt="Press photo 1" /></div>
-          <div class="photo-item p2 reveal reveal-delay-1"><img src="/images/Judas_3.jpg" alt="Press photo 2" style="object-fit:cover;object-position:center 20%;" /></div>
-          <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/touch_5.jpg" alt="Press photo 3" /></div>
-          <div class="photo-item p5 reveal"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" /></div>
-          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/Judas_2.jpg" alt="Press photo 4" /></div>
-          <div class="photo-item p1 reveal" style="aspect-ratio:3/4;"><img src="/images/studo_2_edited.jpg" alt="Studio photo" style="object-fit:cover;object-position:center top;" /></div>
-          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/body_art_edited.jpg" alt="Body art photo" style="object-fit:contain;object-position:center;background:#0a0a0a;filter:grayscale(100%) contrast(1.05);" /></div>
-          <div class="photo-item p5 reveal reveal-delay-2" style="overflow:hidden;"><img src="/images/red_2_edited.jpg" alt="Red photo" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(100%) contrast(1.05);transform:rotate(-90deg) scale(1.8);transform-origin:center center;" /></div>
-          <div class="photo-item p2 reveal"><img src="/images/velvet.JPG" alt="Velvet photo" style="object-fit:cover;object-position:center top;filter:grayscale(100%) contrast(1.05);" /></div>
+          <div class="photo-item p1 reveal"><img src="/images/Judas_1.jpg" alt="Press photo 1" loading="lazy" decoding="async" /></div>
+          <div class="photo-item p2 reveal reveal-delay-1"><img src="/images/Judas_3.jpg" alt="Press photo 2" loading="lazy" decoding="async" style="object-fit:cover;object-position:center 20%;" /></div>
+          <div class="photo-item p3 reveal reveal-delay-2"><img src="/images/touch_5.jpg" alt="Press photo 3" loading="lazy" decoding="async" /></div>
+          <div class="photo-item p5 reveal"><img src="${s.cover||'/images/Lying_Thief_Final_Cover_Art.jpg'}" alt="Single cover art" loading="lazy" decoding="async" /></div>
+          <div class="photo-item p4 reveal reveal-delay-1"><img src="/images/Judas_2.jpg" alt="Press photo 4" loading="lazy" decoding="async" /></div>
+          <div class="photo-item p1 reveal" style="aspect-ratio:3/4;"><img src="/images/studo_2_edited.jpg" alt="Studio photo" loading="lazy" decoding="async" style="object-fit:cover;object-position:center top;" /></div>
+          <div class="photo-item p3 reveal reveal-delay-1" style="aspect-ratio:2/3;"><img src="/images/body_art_edited.jpg" alt="Body art photo" loading="lazy" decoding="async" style="object-fit:cover;object-position:center top;filter:grayscale(100%) contrast(1.05);" /></div>
+          <div class="photo-item p4 reveal reveal-delay-2"><img src="/images/red_2_edited.jpg" alt="Red photo" loading="lazy" decoding="async" style="object-fit:cover;object-position:center;filter:grayscale(100%) contrast(1.05);" /></div>
+          <div class="photo-item p5 reveal"><img src="/images/velvet.jpg" alt="Velvet photo" loading="lazy" decoding="async" style="object-fit:cover;object-position:center top;filter:grayscale(100%) contrast(1.05);" /></div>
         </div>
         <p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:rgba(245,240,240,.35);margin-top:24px;text-align:right;">
           High-res assets: <a href="mailto:${email}" style="color:var(--blue);text-decoration:none;">${email}</a>
@@ -394,7 +373,6 @@ async function init() {
 
     <div class="divider"></div>
 
-    <!-- CONTACT — #12: email + instagram + location only, button links, no form, no booking -->
     <section id="contact">
       <div>
         <div class="reveal">
@@ -418,7 +396,6 @@ async function init() {
       </div>
     </section>
 
-    <!-- FOOTER — #13: no social buttons, #14: TV static canvas -->
     <div class="footer-wrap">
       <canvas id="footerCanvas"></canvas>
       <footer>
@@ -430,188 +407,36 @@ async function init() {
     </div>
   `;
 
-  document.querySelectorAll('a,button,input,textarea').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';cursor.style.background='var(--blue)';});
-    el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';cursor.style.background='var(--pink)';});
+  // cursor hover scale
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = cursor.style.transform.replace(')', ',0)').replace('translate3d','scale') || ''; cursor.style.background = 'var(--blue)'; cursor.style.scale = '2'; }, { passive:true });
+    el.addEventListener('mouseleave', () => { cursor.style.background = 'var(--pink)'; cursor.style.scale = '1'; }, { passive:true });
   });
 
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
-  },{threshold:0.12});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  // scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  setTimeout(()=>{
-    initFooterStatic();
-    initPhotosStatic();
-  },100);
+  setTimeout(() => {
+    initStatic('photosCanvas');
+    initStatic('footerCanvas');
+  }, 200);
 }
 
-// ── MUSIC CROSS — stationary, glitch in/out, shadow silhouette + shatter lines ──
-function initMusicCross() {
-  const canvas = document.getElementById('musicCrossCanvas');
+// ── SHARED OPTIMISED STATIC ENGINE ──────────────────
+// Renders noise at 1/4 resolution then scales up — 16x cheaper than full-res pixel loop.
+// Uses IntersectionObserver to pause when off-screen.
+function initStatic(id) {
+  const canvas = document.getElementById(id);
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const PINK = '#FF2D8B';
-  const BLUE = '#00F0FF';
+  const ctx = canvas.getContext('2d', { alpha: false });
 
-  function resize() {
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    setupCross();
-  }
-
-  let crossW, crossH, baseX, baseY;
-  function setupCross() {
-    crossW = Math.min(canvas.width * 0.18, 72);
-    crossH = crossW * 3.2;
-    baseX  = canvas.width  * 0.68 - crossW / 2;
-    baseY  = canvas.height * 0.5  - crossH / 2;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function makeCross() {
-    const oc = document.createElement('canvas');
-    oc.width = 100; oc.height = 300;
-    const c = oc.getContext('2d');
-    c.clearRect(0,0,100,300);
-    const cx=50, stemW=10, cbY=300*0.65, cbW=80, cbH=9;
-    function jitter(x1,y1,x2,y2,w,a){
-      const steps=10+Math.floor(Math.random()*6);
-      c.beginPath();
-      c.moveTo(x1+(Math.random()-.5)*2,y1+(Math.random()-.5)*2);
-      for(let i=1;i<=steps;i++){
-        const t=i/steps;
-        c.lineTo(x1+(x2-x1)*t+(Math.random()-.5)*2.2,y1+(y2-y1)*t+(Math.random()-.5)*2.2);
-      }
-      c.strokeStyle=`rgba(255,45,139,${a})`;
-      c.lineWidth=w; c.lineCap='round'; c.lineJoin='round';
-      c.shadowColor=PINK; c.shadowBlur=10; c.stroke();
-    }
-    for(let p=0;p<5;p++) jitter(cx+(Math.random()-.5)*2,4,cx+(Math.random()-.5)*2,296,stemW-p*1.2,0.5-p*0.05);
-    jitter(cx,4,cx,296,2,0.95);
-    jitter(cx-stemW*.45,10,cx-stemW*.4,290,0.7,0.28);
-    jitter(cx+stemW*.45,8,cx+stemW*.42,288,0.7,0.24);
-    const cx1=(100-cbW)/2, cx2=cx1+cbW;
-    for(let p=0;p<4;p++) jitter(cx1,cbY+(Math.random()-.5)*1.5,cx2,cbY+(Math.random()-.5)*1.5,cbH-p*1.2,0.5-p*0.06);
-    jitter(cx1,cbY,cx2,cbY,2,0.92);
-    jitter(cx1+4,cbY-cbH*.4,cx2-4,cbY-cbH*.38,0.6,0.25);
-    jitter(cx1+4,cbY+cbH*.4,cx2-4,cbY+cbH*.38,0.6,0.22);
-    c.shadowBlur=0; c.globalAlpha=0.18; c.strokeStyle='#fff'; c.lineWidth=1;
-    c.beginPath(); c.moveTo(cx,8); c.lineTo(cx,292); c.stroke();
-    c.beginPath(); c.moveTo(cx1+8,cbY); c.lineTo(cx2-8,cbY); c.stroke();
-    c.globalAlpha=1;
-    return oc;
-  }
-
-  let crossSrc = makeCross();
-  // persistent dim shadow silhouette
-  let shadowAlpha = 0;
-  let shatterLines = [];
-  let frameCount=0, lastGlitch=-9999;
-  const GLITCH_INTERVAL=220;
-  const FADE_DELAY=55;
-  let globalAlpha=0, fadeInDone=false;
-  // glitch state: cross blinks in and out
-  let visible=true, glitchTimer=0, glitchPhase='idle';
-  // glitchPhase: idle → out → in → idle
-
-  function spawnShatter() {
-    for(let i=0;i<10+Math.random()*8;i++){
-      const angle=Math.random()*Math.PI*2;
-      const len=20+Math.random()*60;
-      shatterLines.push({
-        x: baseX + crossW*0.5 + (Math.random()-.5)*crossW*0.8,
-        y: baseY + crossH*0.5 + (Math.random()-.5)*crossH*0.5,
-        angle, len,
-        alpha: 0.5+Math.random()*0.4,
-        color: Math.random()>.5?PINK:BLUE,
-        life:1, decay:0.03+Math.random()*0.04
-      });
-    }
-  }
-
-  function loop(){
-    frameCount++;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    if(!fadeInDone){
-      if(frameCount>FADE_DELAY){ globalAlpha+=0.014; if(globalAlpha>=1){globalAlpha=1;fadeInDone=true;} }
-    }
-
-    // trigger glitch cycle
-    if(fadeInDone && glitchPhase==='idle' && frameCount-lastGlitch>GLITCH_INTERVAL){
-      glitchPhase='out'; glitchTimer=0; lastGlitch=frameCount;
-      if(Math.random()>.4) crossSrc=makeCross();
-    }
-
-    if(glitchPhase==='out'){
-      glitchTimer++;
-      // flicker out over ~20 frames
-      if(glitchTimer>20){ glitchPhase='in'; glitchTimer=0; visible=false; spawnShatter(); shadowAlpha=0.22; }
-    } else if(glitchPhase==='in'){
-      glitchTimer++;
-      // stay invisible 10-30 frames then flicker back
-      if(glitchTimer>10+Math.random()*20){ glitchPhase='idle'; glitchTimer=0; visible=true; spawnShatter(); }
-    }
-
-    // fade shadow silhouette
-    if(shadowAlpha>0){
-      ctx.save(); ctx.globalAlpha=shadowAlpha*globalAlpha;
-      ctx.drawImage(crossSrc,baseX,baseY,crossW,crossH);
-      ctx.restore();
-      shadowAlpha-=0.003;
-    }
-
-    // shatter lines
-    for(let i=shatterLines.length-1;i>=0;i--){
-      const l=shatterLines[i];
-      l.life-=l.decay;
-      if(l.life<=0){shatterLines.splice(i,1);continue;}
-      ctx.save();
-      ctx.globalAlpha=l.alpha*l.life*globalAlpha;
-      ctx.strokeStyle=l.color;
-      ctx.lineWidth=1;
-      ctx.shadowColor=l.color; ctx.shadowBlur=4;
-      ctx.beginPath();
-      ctx.moveTo(l.x,l.y);
-      ctx.lineTo(l.x+Math.cos(l.angle)*l.len*l.life,l.y+Math.sin(l.angle)*l.len*l.life);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // main cross
-    if(visible){
-      const flicker = glitchPhase==='out'?(glitchTimer%3<2?1:0.2):1;
-      const mainA = globalAlpha*flicker*(0.78+Math.sin(frameCount*.018)*.07);
-      // chromatic aberration during out phase
-      if(glitchPhase==='out'){
-        ctx.save(); ctx.globalAlpha=mainA*.4; ctx.globalCompositeOperation='screen';
-        ctx.drawImage(crossSrc,baseX-4,baseY+1,crossW,crossH); ctx.restore();
-        ctx.save(); ctx.globalAlpha=mainA*.4; ctx.globalCompositeOperation='screen';
-        ctx.drawImage(crossSrc,baseX+4,baseY-1,crossW,crossH); ctx.restore();
-      }
-      ctx.save(); ctx.globalAlpha=mainA;
-      ctx.drawImage(crossSrc,baseX,baseY,crossW,crossH); ctx.restore();
-    }
-
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-// ── PHOTOS SECTION STATIC ───────────────────────────
-function initPhotosStatic() {
-  const canvas = document.getElementById('photosCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  function resize(){
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  // small offscreen buffer for noise — drawn at low res, scaled up
+  const buf    = document.createElement('canvas');
+  const bufCtx = buf.getContext('2d', { alpha: false });
+  const SCALE  = 4; // render at 1/4 size
 
   const COLORS = [
     [10,10,10],
@@ -619,150 +444,86 @@ function initPhotosStatic() {
     [255,45,139],
     [0,240,255],
   ];
-
   let phaseT=0, colorIdx=0;
-  const PHASE_DURATION=180;
-  let fromColor=COLORS[0], toColor=COLORS[1];
+  const PHASE_DUR = 180;
+  let fromC = COLORS[0], toC = COLORS[1];
 
-  function lerpColor(a,b,t){
-    return [
-      Math.round(a[0]+(b[0]-a[0])*t),
-      Math.round(a[1]+(b[1]-a[1])*t),
-      Math.round(a[2]+(b[2]-a[2])*t),
-    ];
-  }
+  function lerp(a,b,t){ return Math.round(a+(b-a)*t); }
+  function lerpColor(a,b,t){ return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)]; }
 
-  function loop(){
-    const W=canvas.width, H=canvas.height;
-    ctx.clearRect(0,0,W,H);
-
-    phaseT++;
-    if(phaseT>PHASE_DURATION){
-      phaseT=0; colorIdx=(colorIdx+1)%COLORS.length;
-      fromColor=COLORS[colorIdx];
-      toColor=COLORS[(colorIdx+1)%COLORS.length];
-    }
-    const t=phaseT/PHASE_DURATION;
-    const bg=lerpColor(fromColor,toColor,t);
-
-    ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;
-    ctx.fillRect(0,0,W,H);
-
-    const imgData=ctx.getImageData(0,0,W,H);
-    const d=imgData.data;
-    for(let i=0;i<d.length;i+=4){
-      const noise=(Math.random()-.5)*120;
-      d[i]  =Math.min(255,Math.max(0,d[i]+noise));
-      d[i+1]=Math.min(255,Math.max(0,d[i+1]+noise));
-      d[i+2]=Math.min(255,Math.max(0,d[i+2]+noise));
-      d[i+3]=255;
-    }
-    ctx.putImageData(imgData,0,0);
-
-    for(let y=0;y<H;y+=2){
-      ctx.fillStyle='rgba(0,0,0,0.08)';
-      ctx.fillRect(0,y,W,1);
-    }
-
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-// ── FOOTER TV STATIC ────────────────────────────────
-function initFooterStatic() {
-  const canvas = document.getElementById('footerCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  function resize(){
-    canvas.width=canvas.offsetWidth;
-    canvas.height=canvas.offsetHeight;
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    buf.width  = Math.max(1, Math.floor(canvas.width  / SCALE));
+    buf.height = Math.max(1, Math.floor(canvas.height / SCALE));
   }
   resize();
-  window.addEventListener('resize',resize);
+  window.addEventListener('resize', debounce(resize, 150));
 
-  const COLORS = [
-    [10,10,10],       // black
-    [245,240,240],    // white
-    [255,45,139],     // pink
-    [0,240,255],      // blue
-  ];
+  let visible = true;
+  const visObs = new IntersectionObserver(entries => {
+    visible = entries[0].isIntersecting;
+  }, { threshold: 0 });
+  visObs.observe(canvas.parentElement || canvas);
 
-  let phase=0, phaseT=0;
-  const PHASE_DURATION=180; // frames per colour
-  let fromColor=COLORS[0], toColor=COLORS[1];
-  let colorIdx=0;
+  let raf;
+  function loop() {
+    raf = requestAnimationFrame(loop);
+    if (!visible) return; // pause when off-screen
 
-  function lerpColor(a,b,t){
-    return [
-      Math.round(a[0]+(b[0]-a[0])*t),
-      Math.round(a[1]+(b[1]-a[1])*t),
-      Math.round(a[2]+(b[2]-a[2])*t),
-    ];
-  }
+    const W = buf.width, H = buf.height;
 
-  function loop(){
-    const W=canvas.width, H=canvas.height;
-    ctx.clearRect(0,0,W,H);
-
-    // advance colour phase
     phaseT++;
-    if(phaseT>PHASE_DURATION){
-      phaseT=0; colorIdx=(colorIdx+1)%COLORS.length;
-      fromColor=COLORS[colorIdx];
-      toColor=COLORS[(colorIdx+1)%COLORS.length];
+    if (phaseT > PHASE_DUR) {
+      phaseT = 0;
+      colorIdx = (colorIdx + 1) % COLORS.length;
+      fromC = COLORS[colorIdx];
+      toC   = COLORS[(colorIdx + 1) % COLORS.length];
     }
-    const t=phaseT/PHASE_DURATION;
-    const bg=lerpColor(fromColor,toColor,t);
+    const t  = phaseT / PHASE_DUR;
+    const bg = lerpColor(fromC, toC, t);
 
-    // fill bg
-    ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;
-    ctx.fillRect(0,0,W,H);
+    // fill base colour
+    bufCtx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
+    bufCtx.fillRect(0, 0, W, H);
 
-    // TV static noise
-    const imgData=ctx.getImageData(0,0,W,H);
-    const d=imgData.data;
-    for(let i=0;i<d.length;i+=4){
-      const noise=(Math.random()-.5)*120;
-      d[i]  =Math.min(255,Math.max(0,d[i]+noise));
-      d[i+1]=Math.min(255,Math.max(0,d[i+1]+noise));
-      d[i+2]=Math.min(255,Math.max(0,d[i+2]+noise));
-      d[i+3]=255;
+    // noise at low resolution
+    const imgData = bufCtx.getImageData(0, 0, W, H);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const n = (Math.random() - 0.5) * 110;
+      d[i]   = Math.min(255, Math.max(0, d[i]   + n));
+      d[i+1] = Math.min(255, Math.max(0, d[i+1] + n));
+      d[i+2] = Math.min(255, Math.max(0, d[i+2] + n));
     }
-    ctx.putImageData(imgData,0,0);
+    bufCtx.putImageData(imgData, 0, 0);
 
-    // scanlines
-    for(let y=0;y<H;y+=2){
-      ctx.fillStyle='rgba(0,0,0,0.08)';
-      ctx.fillRect(0,y,W,1);
-    }
-
-    requestAnimationFrame(loop);
+    // scale up to full canvas — pixelated gives chunky static look
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(buf, 0, 0, canvas.width, canvas.height);
   }
   loop();
 }
 
-if(window.netlifyIdentity){
-  window.netlifyIdentity.on('init',user=>{
-    if(!user){window.netlifyIdentity.on('login',()=>{document.location.href='/admin/';});}
-  });
-}
-
-function toggleMenu(){
+function toggleMenu() {
   document.getElementById('hamburger').classList.toggle('open');
   document.getElementById('mobileMenu').classList.toggle('open');
 }
-function closeMenu(){
+function closeMenu() {
   document.getElementById('hamburger').classList.remove('open');
   document.getElementById('mobileMenu').classList.remove('open');
 }
 
-// hide custom cursor on touch devices
-if('ontouchstart' in window){
-  document.getElementById('cursor').style.display='none';
-  document.getElementById('cursorRing').style.display='none';
-  document.body.style.cursor='auto';
+if ('ontouchstart' in window) {
+  document.getElementById('cursor').style.display = 'none';
+  document.getElementById('cursorRing').style.display = 'none';
+  document.body.style.cursor = 'auto';
+}
+
+if (window.netlifyIdentity) {
+  window.netlifyIdentity.on('init', user => {
+    if (!user) window.netlifyIdentity.on('login', () => { document.location.href = '/admin/'; });
+  });
 }
 
 init();
